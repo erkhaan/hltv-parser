@@ -11,11 +11,11 @@ import os
 
 # Input data
 # TODO: Should get as args
-playerName = 'cadiaN'
-playerID = '7964'
-teamID = ['7175']
-dateStart = '2022-01-01'
-dateEnd = '2022-12-31'
+player_name = 'cadiaN'
+player_id = '7964'
+team_id = ['7175']
+date_start = '2022-01-01'
+date_end = '2022-12-31'
 
 # Disable images
 option = webdriver.ChromeOptions()
@@ -33,26 +33,26 @@ accept.send_keys(Keys.RETURN)
 driver.implicitly_wait(0.5)
 
 # TODO: Move to method collectLinks(teamID) -> matchLinks
-matchLinks = []
-for team in teamID:
+match_links = []
+for team in team_id:
     for offset in ['0', '100', '200']:
-        teamLink = ('https://www.hltv.org/results?offset='
-                    + offset
-                    + '&startDate='
-                    + dateStart
-                    + '&endDate='
-                    + dateEnd
-                    + '&team='
-                    + team
-                    + '&content=highlights')
+        link = ('https://www.hltv.org/results?offset='
+                + offset
+                + '&startDate='
+                + date_start
+                + '&endDate='
+                + date_end
+                + '&team='
+                + team
+                + '&content=highlights')
         # teamLink = 'https://www.hltv.org/results?content=highlights&'+'player='+playerID+'&startDate='+dateStart+'&endDate='+dateEnd+'&offset='+offset
-        driver.get(teamLink)
+        driver.get(link)
         try:
             driver.find_elements(By.XPATH, "//*[contains(text(), 'My Button')]")
             elem = driver.find_element(By.CSS_SELECTOR, "div.results-all:not(.results-holder)")
             hrefs = elem.find_elements(By.CLASS_NAME, 'a-reset')
             for href in hrefs:
-                matchLinks.append(href.get_attribute('href'))
+                match_links.append(href.get_attribute('href'))
         except NoSuchElementException:
             pass
 
@@ -62,14 +62,12 @@ if not os.path.exists(directory):
     os.makedirs(directory)
 
 file_path = ('./data/matches_'
-             + playerName
+             + player_name
              + '.csv')
 
 # Overwrites if file exist
 with open(file_path, 'w', newline='') as myfile:
     wr = csv.writer(myfile)
     wr.writerow(['links'])
-    for link in matchLinks:
+    for link in match_links:
         wr.writerow([link])
-
-# After file is created, parse highlights

@@ -1,11 +1,11 @@
 from selenium.webdriver.common.by import By
 import matches_parser as mp
 
-player = mp.playerName
+player = mp.player_name
 
 # Parse clip links
 clip_links = []
-for link in mp.matchLinks:
+for link in mp.match_links:
     mp.driver.get(link)
     highlight_boxes = mp.driver.find_elements(By.CLASS_NAME,
                                               'highlight.padding.standard-box')
