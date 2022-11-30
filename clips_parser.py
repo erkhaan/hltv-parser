@@ -1,5 +1,6 @@
 from selenium.webdriver.common.by import By
 import matches_parser as mp
+import os
 
 player = mp.player_name
 
@@ -21,6 +22,10 @@ for link in clip_links:
     clean_links.append(link
                        .replace('embed?clip=', '')
                        .replace('&autoplay=true&parent=www.hltv.org', ''))
+# Create dir if not exists
+directory = './data/'
+if not os.path.exists(directory):
+    os.makedirs(directory)
 
 # Add result to text file
 filename = './data/highlights_' + player + '.txt'

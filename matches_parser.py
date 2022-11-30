@@ -2,12 +2,9 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
-import csv
-import os
 
 # First to use
 # This file gets match links of a player by ids and date
-# Returns csv file with links into ./data
 
 # Input data
 # TODO: Should get as args
@@ -55,19 +52,3 @@ for team in team_id:
                 match_links.append(href.get_attribute('href'))
         except NoSuchElementException:
             pass
-
-# Create dir if not exists
-directory = './data/'
-if not os.path.exists(directory):
-    os.makedirs(directory)
-
-file_path = ('./data/matches_'
-             + player_name
-             + '.csv')
-
-# Overwrites if file exist
-with open(file_path, 'w', newline='') as myfile:
-    wr = csv.writer(myfile)
-    wr.writerow(['links'])
-    for link in match_links:
-        wr.writerow([link])
