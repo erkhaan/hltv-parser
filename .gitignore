@@ -176,3 +176,9 @@ entire idea folder.
 
 # csv
 *.csv
+
+# macOS
+.DS_store
+
+# PyCharm
+*.idea/
