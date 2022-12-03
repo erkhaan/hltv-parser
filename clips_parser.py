@@ -6,15 +6,28 @@ player = mp.player_name
 
 # Parse clip links
 clip_links = []
+clutch_only = False
+
+def is_clutch(text):
+    keywords = ['1vs2', '1vs3', '1vs4', '1vs5', 'clutch']
+    for word in keywords:
+        if word in text:
+            return True
+    return False
+
 for link in mp.match_links:
     mp.driver.get(link)
     highlight_boxes = mp.driver.find_elements(By.CLASS_NAME,
                                               'highlight.padding.standard-box')
     for box in highlight_boxes:
-        # Required highlights
-        # if (playerName in i.text and ('ACE' in i.text or '1vs5' in i.text or '1vs4' in i.text or '1vs3' in i.text or '4' in i.text or 'quick' in i.text)):
-        if player in box.text:
-            clip_links.append(box.get_attribute('data-highlight-embed'))
+        clip = box.get_attribute('data-highlight-embed')
+        is_player = player in box.text
+        if clutch_only:
+            if is_player & is_clutch(box.text):
+                clip_links.append(clip)
+        else:
+            if is_player:
+                clip_links.append(clip)
 
 # Clean links from params
 clean_links = []
@@ -28,7 +41,11 @@ if not os.path.exists(directory):
     os.makedirs(directory)
 
 # Add result to text file
-filename = './data/highlights_' + player + '.txt'
+if clutch_only:
+    filename = './data/clutches_' + player + '.txt'
+else:
+    filename = './data/highlights_' + player + '.txt'
+
 with open(filename, 'w', newline='') as myfile:
     for link in clean_links:
         print(link, file=myfile)
