@@ -69,4 +69,3 @@ for id in range(id_start - 1, id_end):
     player_match_links[player_name] = matches_links
     for name, links in player_match_links.items():
         print(name, links)
-driver.close()
