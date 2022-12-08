@@ -29,20 +29,28 @@ accept = driver.find_element(By.ID, 'CybotCookiebotDialogBodyLevelButtonLevelOpt
 accept.send_keys(Keys.RETURN)
 driver.implicitly_wait(0.5)
 
+
+def get_link(offset, date_start, date_end, team):
+    link = ('https://www.hltv.org/results?offset='
+            + offset
+            + '&startDate='
+            + date_start
+            + '&endDate='
+            + date_end
+            + '&team='
+            + team
+            + '&content=highlights')
+    return link
+
+
 # TODO: Move to method collectLinks(teamID) -> matchLinks
 match_links = []
 for team in team_id:
     for offset in ['0', '100', '200']:
-        link = ('https://www.hltv.org/results?offset='
-                + offset
-                + '&startDate='
-                + date_start
-                + '&endDate='
-                + date_end
-                + '&team='
-                + team
-                + '&content=highlights')
-        # teamLink = 'https://www.hltv.org/results?content=highlights&'+'player='+playerID+'&startDate='+dateStart+'&endDate='+dateEnd+'&offset='+offset
+        link = get_link(offset,
+                        date_start,
+                        date_end,
+                        team)
         driver.get(link)
         try:
             driver.find_elements(By.XPATH, "//*[contains(text(), 'My Button')]")
