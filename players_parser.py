@@ -36,29 +36,18 @@ def get_link(player_id, date_start, date_end, offset):
     return link
 
 
-def is_enough_matches(driver, min):
+def is_enough_matches(driver, min_count):
     element_pagination = driver.find_element(By.CLASS_NAME, 'pagination-data')
     text = element_pagination.text
     pagination_data = [int(s) for s in text.split() if s.isdigit()]
     matches_count = pagination_data[2]
-    if matches_count < min:
+    if matches_count < min_count:
         return False
     else:
         return True
 
 
-def get_player_name(driver, id):
-    link = '/player/' + id + '/'
-    name = driver.find_element(By.XPATH, '//a[contains(@href, "%s")]' % link).text
-    return name
-
-
-def print_links(player_match_links):
-    for name, links in player_match_links.items():
-        print(name, len(links))
-
-for int_id in range(id_start - 1, id_end):
-    player_id = str(int_id + 1)
+def parse_matches(driver, player_id):
     is_error = False
     matches_links = []
     for offset in ['0', '100', '200']:
@@ -82,8 +71,26 @@ for int_id in range(id_start - 1, id_end):
                 matches_links.append(href.get_attribute('href'))
         except NoSuchElementException:
             pass
+    return matches_links, is_error
+
+
+def get_player_name(driver, id):
+    link = '/player/' + id + '/'
+    name = driver.find_element(By.XPATH, '//a[contains(@href, "%s")]' % link).text
+    return name
+
+
+def print_links(player_match_links):
+    for name, links in player_match_links.items():
+        print(name, len(links))
+        print(links)
+
+
+for int_id in range(id_start - 1, id_end):
+    player_id = str(int_id + 1)
+    (matches_links, is_error) = parse_matches(driver, player_id)
     if is_error:
         continue
     name = get_player_name(driver, player_id)
     player_match_links[name] = matches_links
-    print_links(player_match_links)
+print_links(player_match_links)
