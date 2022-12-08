@@ -1,36 +1,54 @@
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
-import pandas as pd
 import players_parser as pp
 import os
 
-driver = pp.driver
-k = 1
-for name, links in pp.player_match_links.items():
-    match_list = links
-    # print(len(matchList))
-    player_name = name
 
-    hlLink = []
-    for link in match_list:
+def get_highlight_links(matches, name):
+    highlight_links = []
+    for link in matches:
         driver.get(link)
-        highlightBoxes = driver.find_elements(By.CLASS_NAME, 'highlight.padding.standard-box')
-        for i in highlightBoxes:
-            if player_name in i.text:
-                hlLink.append(i.get_attribute('data-highlight-embed'))
-    cleanLink = []
+        highlight_boxes = driver.find_elements(By.CLASS_NAME, 'highlight.padding.standard-box')
+        for box in highlight_boxes:
+            if name in box.text:
+                highlight_links.append(box.get_attribute('data-highlight-embed'))
+    return highlight_links
 
-    for link in hlLink:
-        cleanLink.append(link.replace('embed?clip=', '').replace('&autoplay=true&parent=www.hltv.org', ''))
-    directory = './data/players_parser/'
+
+def get_cleaned_links(highlight_links):
+    cleaned_links = []
+    for link in highlight_links:
+        cleaned_links.append(link.replace('embed?clip=', '').replace('&autoplay=true&parent=www.hltv.org', ''))
+    return cleaned_links
+
+
+def manage_directory(directory):
     if not os.path.exists(directory):
         os.makedirs(directory)
 
-    filename = directory + 'highlights_' + player_name + '.txt'
+
+def save_links_in_file(name, links):
+    directory = './data/players_parser/'
+    manage_directory(directory)
+    filename = directory + 'highlights_' + name + '.txt'
     with open(filename, 'w', newline='') as myfile:
-        for link in cleanLink:
+        for link in links:
             print(link, file=myfile)
-    print(k, '\t', player_name, '\t', len(hlLink))
-    k += 1
+
+
+def print_info(count, name, links):
+    print(count, '\t', name, '\t', len(links))
+
+
+def parse_player_clip_links():
+    count = 1
+    for name, matches in pp.player_match_links.items():
+        highlight_links = get_highlight_links(matches, name)
+        links = get_cleaned_links(highlight_links)
+        save_links_in_file(name, links)
+        print_info(count, name, links)
+        count += 1
+
+
+driver = pp.driver
+parse_player_clip_links()
 driver.close()
