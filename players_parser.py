@@ -22,37 +22,57 @@ id_end = 7970
 date_start = '2021-01-01'
 date_end = '2021-12-31'
 
-min_value = 30
+min_matches = 50
 
 player_match_links = {}
 
-for id in range(id_start - 1, id_end):
-    player_id = str(id + 1)
-    is_empty = 0
-    is_error = 0
+
+def get_link(player_id, date_start, date_end, offset):
+    link = 'https://www.hltv.org/results?content=highlights&' \
+           + 'player=' + player_id \
+           + '&startDate=' + date_start \
+           + '&endDate=' + date_end \
+           + '&offset=' + offset
+    return link
+
+
+def is_enough_matches(driver, min):
+    element_pagination = driver.find_element(By.CLASS_NAME, 'pagination-data')
+    text = element_pagination.text
+    pagination_data = [int(s) for s in text.split() if s.isdigit()]
+    matches_count = pagination_data[2]
+    if matches_count < min:
+        return False
+    else:
+        return True
+
+
+def get_player_name(driver, id):
+    link = '/player/' + id + '/'
+    name = driver.find_element(By.XPATH, '//a[contains(@href, "%s")]' % link).text
+    return name
+
+
+def print_links(player_match_links):
+    for name, links in player_match_links.items():
+        print(name, len(links))
+
+for int_id in range(id_start - 1, id_end):
+    player_id = str(int_id + 1)
+    is_error = False
     matches_links = []
     for offset in ['0', '100', '200']:
-        link = 'https://www.hltv.org/results?content=highlights&' \
-               + 'player=' \
-               + player_id \
-               + '&startDate=' \
-               + date_start \
-               + '&endDate=' \
-               + date_end \
-               + '&offset=' \
-               + offset
+        link = get_link(player_id, date_start,
+                        date_end, offset)
         driver.get(link)
         try:
             driver.find_element(By.CLASS_NAME, 'error-body')
-            is_error = 1
+            is_error = True
             break
         except NoSuchElementException:
             pass
-        elemPag = driver.find_element(By.CLASS_NAME, 'pagination-data')
-        text = elemPag.text
-        a = [int(s) for s in text.split() if s.isdigit()]
-        if a[2] < min_value:
-            is_empty = 1
+        if not is_enough_matches(driver, min_matches):
+            is_error = True
             break
         try:
             driver.find_elements(By.XPATH, "//*[contains(text(), 'My Button')]")
@@ -62,10 +82,8 @@ for id in range(id_start - 1, id_end):
                 matches_links.append(href.get_attribute('href'))
         except NoSuchElementException:
             pass
-    if is_empty == 1 or is_error == 1:
+    if is_error:
         continue
-    player_link = '/player/' + player_id + '/'
-    player_name = driver.find_element(By.XPATH, '//a[contains(@href, "%s")]' % player_link).text
-    player_match_links[player_name] = matches_links
-    for name, links in player_match_links.items():
-        print(name, links)
+    name = get_player_name(driver, player_id)
+    player_match_links[name] = matches_links
+    print_links(player_match_links)
