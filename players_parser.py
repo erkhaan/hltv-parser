@@ -86,11 +86,15 @@ def print_links(player_match_links):
         print(links)
 
 
-for int_id in range(id_start - 1, id_end):
-    player_id = str(int_id + 1)
-    (matches_links, is_error) = parse_matches(driver, player_id)
-    if is_error:
-        continue
-    name = get_player_name(driver, player_id)
-    player_match_links[name] = matches_links
+def parse_players():
+    for int_id in range(id_start - 1, id_end):
+        player_id = str(int_id + 1)
+        (matches_links, is_error) = parse_matches(driver, player_id)
+        if is_error:
+            continue
+        name = get_player_name(driver, player_id)
+        player_match_links[name] = matches_links
+
+
+parse_players()
 print_links(player_match_links)
