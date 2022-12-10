@@ -17,31 +17,26 @@ date_end = '2022-12-31'
 driver = bs.driver
 
 def get_link(offset, date_start, date_end, team):
-    link = ('https://www.hltv.org/results?offset='
-            + offset
-            + '&startDate='
-            + date_start
-            + '&endDate='
-            + date_end
-            + '&team='
-            + team
+    link = ('https://www.hltv.org/results?offset='+ offset
+            + '&startDate=' + date_start
+            + '&endDate='+ date_end
+            + '&team=' + team
             + '&content=highlights')
     return link
 
-
-# TODO: Move to method collectLinks(teamID) -> matchLinks
 match_links = []
 for team in team_id:
     for offset in ['0', '100', '200']:
-        link = get_link(offset,
-                        date_start,
-                        date_end,
-                        team)
+        link = get_link(offset, date_start,
+                        date_end, team)
         driver.get(link)
         try:
-            driver.find_elements(By.XPATH, "//*[contains(text(), 'My Button')]")
-            elem = driver.find_element(By.CSS_SELECTOR, "div.results-all:not(.results-holder)")
-            hrefs = elem.find_elements(By.CLASS_NAME, 'a-reset')
+            driver.find_elements(By.XPATH,
+                                 "//*[contains(text(), 'My Button')]")
+            element = driver.find_element(By.CSS_SELECTOR,
+                                       "div.results-all:not(.results-holder)")
+            hrefs = element.find_elements(By.CLASS_NAME,
+                                       'a-reset')
             for href in hrefs:
                 match_links.append(href.get_attribute('href'))
         except NoSuchElementException:
