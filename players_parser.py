@@ -49,7 +49,7 @@ def is_enough_matches(driver, min_count):
 
 def parse_matches(driver, player_id):
     is_error = False
-    matches_links = []
+    match_links = []
     for offset in ['0', '100', '200']:
         link = get_link(player_id, date_start,
                         date_end, offset)
@@ -68,10 +68,11 @@ def parse_matches(driver, player_id):
             elem = driver.find_element(By.CSS_SELECTOR, "div.results-all:not(.results-holder)")
             hrefs = elem.find_elements(By.CLASS_NAME, 'a-reset')
             for href in hrefs:
-                matches_links.append(href.get_attribute('href'))
+                link = href.get_attribute('href')
+                match_links.append(link)
         except NoSuchElementException:
             pass
-    return matches_links, is_error
+    return match_links, is_error
 
 
 def get_player_name(driver, id):
@@ -80,10 +81,9 @@ def get_player_name(driver, id):
     return name
 
 
-def print_links(player_match_links):
+def print_links_info(player_match_links):
     for name, links in player_match_links.items():
         print(name, len(links))
-        print(links)
 
 
 def parse_players():
@@ -97,4 +97,4 @@ def parse_players():
 
 
 parse_players()
-print_links(player_match_links)
+print_links_info(player_match_links)
