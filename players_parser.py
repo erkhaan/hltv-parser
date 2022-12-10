@@ -1,8 +1,6 @@
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
-import cookies_handler as ch
+import browser_setup as bs
 
 # Input data
 id_start = 7964
@@ -15,7 +13,7 @@ min_matches = 50
 player_match_links = {}
 
 # Browser
-driver = ch.driver
+driver = bs.driver
 
 def get_link(player_id, date_start, date_end, offset):
     link = 'https://www.hltv.org/results?content=highlights&' \

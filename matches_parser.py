@@ -1,6 +1,6 @@
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
-import cookies_handler as ch
+import browser_setup as bs
 
 # First to use
 # This file gets match links of a player by ids and date
@@ -13,7 +13,8 @@ team_id = ['7175']
 date_start = '2022-09-01'
 date_end = '2022-12-31'
 
-driver = ch.driver
+# Browser
+driver = bs.driver
 
 def get_link(offset, date_start, date_end, team):
     link = ('https://www.hltv.org/results?offset='

@@ -1,7 +1,8 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
-
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 def get_driver():
     option = webdriver.ChromeOptions()
@@ -15,8 +16,10 @@ def get_driver():
 
 def apply_cookies(driver):
     driver.get('https://www.hltv.org')
-    driver.implicitly_wait(5)
-    accept = driver.find_element(By.ID, 'CybotCookiebotDialogBodyLevelButtonLevelOptinAllowAll')
+    element_id = 'CybotCookiebotDialogBodyLevelButtonLevelOptinAllowAll'
+    accept = WebDriverWait(driver, 5).until(
+        EC.presence_of_element_located((By.ID, element_id))
+    )
     accept.send_keys(Keys.RETURN)
     driver.implicitly_wait(0.5)
 
