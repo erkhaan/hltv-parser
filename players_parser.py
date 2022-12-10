@@ -7,7 +7,7 @@ id_start = 7964
 id_end = 7970
 date_start = '2021-09-01'
 date_end = '2021-12-31'
-min_matches = 50
+min_matches = 1
 
 # Result
 player_match_links = {}

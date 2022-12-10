@@ -27,6 +27,8 @@ def get_clean_links(clip_links):
 
 
 def save_links(name, links):
+    if len(links) == 0:
+        return
     directory = './data/players_parser/'
     manage_directory(directory)
     filename = directory + 'highlights_' + name + '.txt'
