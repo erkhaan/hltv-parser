@@ -3,22 +3,34 @@ import players_parser as pp
 import os
 
 
-def get_highlight_links(matches, name):
-    highlight_links = []
-    for link in matches:
+def get_clips_links(match_links, name):
+    clips_links = []
+    for link in match_links:
         driver.get(link)
-        highlight_boxes = driver.find_elements(By.CLASS_NAME, 'highlight.padding.standard-box')
-        for box in highlight_boxes:
+        clip_boxes = driver.find_elements(By.CLASS_NAME,
+                                          'highlight.padding.standard-box')
+        for box in clip_boxes:
             if name in box.text:
-                highlight_links.append(box.get_attribute('data-highlight-embed'))
-    return highlight_links
+                clip_link = box.get_attribute('data-highlight-embed')
+                clips_links.append(clip_link)
+    return clips_links
 
 
-def get_cleaned_links(highlight_links):
-    cleaned_links = []
-    for link in highlight_links:
-        cleaned_links.append(link.replace('embed?clip=', '').replace('&autoplay=true&parent=www.hltv.org', ''))
-    return cleaned_links
+def get_clean_links(clip_links):
+    clean_links = []
+    for link in clip_links:
+        clean_link = link \
+            .replace('embed?clip=', '') \
+            .replace('&autoplay=true&parent=www.hltv.org', '')
+        clean_links.append(clean_link)
+    return clean_links
+
+
+def save_links(name, links):
+    directory = './data/players_parser/'
+    manage_directory(directory)
+    filename = directory + 'highlights_' + name + '.txt'
+    write_file(filename, links)
 
 
 def manage_directory(directory):
@@ -26,10 +38,7 @@ def manage_directory(directory):
         os.makedirs(directory)
 
 
-def save_links_in_file(name, links):
-    directory = './data/players_parser/'
-    manage_directory(directory)
-    filename = directory + 'highlights_' + name + '.txt'
+def write_file(filename, links):
     with open(filename, 'w', newline='') as myfile:
         for link in links:
             print(link, file=myfile)
@@ -42,9 +51,9 @@ def print_info(count, name, links):
 def parse_player_clip_links():
     count = 1
     for name, matches in pp.player_match_links.items():
-        highlight_links = get_highlight_links(matches, name)
-        links = get_cleaned_links(highlight_links)
-        save_links_in_file(name, links)
+        clip_links = get_clips_links(matches, name)
+        links = get_clean_links(clip_links)
+        save_links(name, links)
         print_info(count, name, links)
         count += 1
 
