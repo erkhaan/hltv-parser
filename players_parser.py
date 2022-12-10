@@ -2,30 +2,20 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
+import cookies_handler as ch
 
-# disable images
-option = webdriver.ChromeOptions()
-chrome_prefs = {}
-option.experimental_options["prefs"] = chrome_prefs
-chrome_prefs["profile.default_content_settings"] = {"images": 2}
-chrome_prefs["profile.managed_default_content_settings"] = {"images": 2}
-driver = webdriver.Chrome(options=option)
-
-driver.get('https://www.hltv.org')
-driver.implicitly_wait(5)
-accept = driver.find_element(By.ID, 'CybotCookiebotDialogBodyLevelButtonLevelOptinAllowAll')
-accept.send_keys(Keys.RETURN)
-driver.implicitly_wait(0.5)
-
+# Input data
 id_start = 7964
 id_end = 7970
-date_start = '2021-01-01'
+date_start = '2021-09-01'
 date_end = '2021-12-31'
-
 min_matches = 50
 
+# Result
 player_match_links = {}
 
+# Browser
+driver = ch.driver
 
 def get_link(player_id, date_start, date_end, offset):
     link = 'https://www.hltv.org/results?content=highlights&' \

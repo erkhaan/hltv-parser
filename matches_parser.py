@@ -1,7 +1,6 @@
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
+import cookies_handler as ch
 
 # First to use
 # This file gets match links of a player by ids and date
@@ -11,24 +10,10 @@ from selenium.common.exceptions import NoSuchElementException
 player_name = 'cadiaN'
 player_id = '7964'
 team_id = ['7175']
-date_start = '2022-01-01'
+date_start = '2022-09-01'
 date_end = '2022-12-31'
 
-# Disable images
-option = webdriver.ChromeOptions()
-chrome_prefs = {}
-option.experimental_options["prefs"] = chrome_prefs
-chrome_prefs["profile.default_content_settings"] = {"images": 2}
-chrome_prefs["profile.managed_default_content_settings"] = {"images": 2}
-driver = webdriver.Chrome(options=option)
-
-# TODO: - Move to method waitForAllowSelection, because of reuse
-driver.get('https://www.hltv.org')
-driver.implicitly_wait(5)
-accept = driver.find_element(By.ID, 'CybotCookiebotDialogBodyLevelButtonLevelOptinAllowAll')
-accept.send_keys(Keys.RETURN)
-driver.implicitly_wait(0.5)
-
+driver = ch.driver
 
 def get_link(offset, date_start, date_end, team):
     link = ('https://www.hltv.org/results?offset='
