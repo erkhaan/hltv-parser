@@ -16,7 +16,7 @@ date_end = '2022-12-31'
 # Browser
 driver = bs.driver
 
-def get_link(offset, date_start, date_end, team):
+def link_from(offset, date_start, date_end, team):
     link = ('https://www.hltv.org/results?offset='+ offset
             + '&startDate=' + date_start
             + '&endDate='+ date_end
@@ -27,8 +27,8 @@ def get_link(offset, date_start, date_end, team):
 match_links = []
 for team in team_id:
     for offset in ['0', '100', '200']:
-        link = get_link(offset, date_start,
-                        date_end, team)
+        link = link_from(offset, date_start,
+                         date_end, team)
         driver.get(link)
         try:
             driver.find_elements(By.XPATH,

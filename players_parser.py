@@ -15,7 +15,7 @@ player_match_links = {}
 # Browser
 driver = bs.driver
 
-def get_link(player_id, date_start, date_end, offset):
+def link_for(player_id, date_start, date_end, offset):
     link = 'https://www.hltv.org/results?content=highlights&' \
            + 'player=' + player_id \
            + '&startDate=' + date_start \
@@ -39,7 +39,7 @@ def parse_matches(driver, player_id):
     is_error = False
     match_links = []
     for offset in ['0', '100', '200']:
-        link = get_link(player_id, date_start,
+        link = link_for(player_id, date_start,
                         date_end, offset)
         driver.get(link)
         try:
@@ -63,7 +63,7 @@ def parse_matches(driver, player_id):
     return match_links, is_error
 
 
-def get_player_name(driver, id):
+def player_name_for(id, driver):
     link = '/player/' + id + '/'
     name = driver.find_element(By.XPATH, '//a[contains(@href, "%s")]' % link).text
     return name
@@ -80,7 +80,7 @@ def parse_players():
         (matches_links, is_error) = parse_matches(driver, player_id)
         if is_error:
             continue
-        name = get_player_name(driver, player_id)
+        name = player_name_for(player_id, driver)
         player_match_links[name] = matches_links
 
 

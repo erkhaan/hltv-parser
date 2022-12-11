@@ -3,7 +3,7 @@ import players_parser as pp
 import os
 
 
-def get_clips_links(match_links, name):
+def clips_links_from(match_links, name):
     clips_links = []
     for link in match_links:
         driver.get(link)
@@ -16,7 +16,7 @@ def get_clips_links(match_links, name):
     return clips_links
 
 
-def get_clean_links(clip_links):
+def clean_links_for(clip_links):
     clean_links = []
     for link in clip_links:
         clean_link = link \
@@ -46,17 +46,17 @@ def write_file(filename, links):
             print(link, file=myfile)
 
 
-def print_info(count, name, links):
+def print_info_for(count, name, links):
     print(count, '\t', name, '\t', len(links))
 
 
 def parse_player_clip_links():
     count = 1
     for name, matches in pp.player_match_links.items():
-        clip_links = get_clips_links(matches, name)
-        links = get_clean_links(clip_links)
+        clip_links = clips_links_from(matches, name)
+        links = clean_links_for(clip_links)
         save_links(name, links)
-        print_info(count, name, links)
+        print_info_for(count, name, links)
         count += 1
 
 
