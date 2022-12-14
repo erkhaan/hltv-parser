@@ -16,13 +16,15 @@ date_end = '2022-12-31'
 # Browser
 driver = bs.driver
 
+
 def link_from(offset, date_start, date_end, team):
-    link = ('https://www.hltv.org/results?offset='+ offset
+    link = ('https://www.hltv.org/results?offset=' + offset
             + '&startDate=' + date_start
-            + '&endDate='+ date_end
+            + '&endDate=' + date_end
             + '&team=' + team
             + '&content=highlights')
     return link
+
 
 match_links = []
 for team in team_id:
@@ -34,9 +36,9 @@ for team in team_id:
             driver.find_elements(By.XPATH,
                                  "//*[contains(text(), 'My Button')]")
             element = driver.find_element(By.CSS_SELECTOR,
-                                       "div.results-all:not(.results-holder)")
+                                          "div.results-all:not(.results-holder)")
             hrefs = element.find_elements(By.CLASS_NAME,
-                                       'a-reset')
+                                          'a-reset')
             for href in hrefs:
                 match_links.append(href.get_attribute('href'))
         except NoSuchElementException:

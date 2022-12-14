@@ -8,12 +8,14 @@ player = mp.player_name
 clip_links = []
 clutch_only = False
 
+
 def is_clutch(text):
     keywords = ['1vs2', '1vs3', '1vs4', '1vs5', 'clutch']
     for word in keywords:
         if word in text:
             return True
     return False
+
 
 for link in mp.match_links:
     mp.driver.get(link)
