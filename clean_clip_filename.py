@@ -8,9 +8,9 @@ target_path = ''
 
 files = os.listdir(path)
 for file in files:
-    newfile = file.replace(player + ' - ', '')\
-        .replace(player + ' ', '')\
-        .replace(player + "'s - ", '')\
+    newfile = file.replace(player + ' - ', '') \
+        .replace(player + ' ', '') \
+        .replace(player + "'s - ", '') \
         .replace(player + "'s'", '')
 os.rename(
     os.path.join(path, file),
